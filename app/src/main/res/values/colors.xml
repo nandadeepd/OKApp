@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#9E9E9E</color>
+    <color name="tab1">#444554</color>
+    <color name ="toolbar_text_color">#F5F5F5</color>
+    <color name="tab2">#172121</color>
+    <color name="tab3">#ED474A</color>
+    <color name="primaryColorDark">#616161</color>
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/grid_image_item"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:src="@mipmap/ic_launcher"
+        app:riv_border_width="0dip"
+        app:riv_corner_radius="60dp"
+        app:riv_oval="false" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/grid_image_item"
+        android:layout_toRightOf="@+id/grid_image_item">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:id="@+id/upbutt"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/up"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/ic_thumb_up" />
+
+
+    </RelativeLayout>
+    <Button
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_toLeftOf="@id/upbutt"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_thumb_down"
+        android:layout_marginRight="10dp"/>
+
+</RelativeLayout>
