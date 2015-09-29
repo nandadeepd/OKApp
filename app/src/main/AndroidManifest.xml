@@ -67,6 +67,8 @@
             android:exported="false"
             android:label="group provider"
             android:syncable="true" />
+        <receiver android:name=".service.NotifBarReplier"/>
+
 
         <receiver
             android:name=".service.gcm.GcmBroadcastReceiver"

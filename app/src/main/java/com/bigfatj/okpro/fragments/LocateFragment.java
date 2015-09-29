@@ -65,16 +65,18 @@ public class LocateFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public class GetLocationTable extends AsyncTask<Void, Void, Void> {
+    public class GetLocationTable extends AsyncTask<Void, Void, LatLng> {
         String userID;
+        String name;
 
-        public GetLocationTable(String userID) {
+        public GetLocationTable(String userID, String name) {
 
             this.userID = userID;
+            this.name = name;
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected LatLng doInBackground(Void... voids) {
 
             HttpClient hpClient = new DefaultHttpClient();
             HttpPost post = new HttpPost("http://okapp.16mb.com/getLocation.php?fid=" + userID);
@@ -92,8 +94,10 @@ public class LocateFragment extends Fragment {
                 String lat = obj.get("lat").toString();
                 String lon = obj.get("lon").toString();
                 if (!lat.equals("null") && !lon.equals("null")) {
-                    LatLng loc = new LatLng(Long.parseLong(lat), Long.parseLong(lon));
+                    LatLng loc = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+
                     locationVals.add(loc);
+                    return loc;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -101,15 +105,14 @@ public class LocateFragment extends Fragment {
             return null;
         }
 
-
-    }
-
-    public void setLocationMarker() {
-        for (int i = 0; i < locationVals.size(); i++) {
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(locationVals.get(i));
-            markerOptions.title(usernames.get(i));
-            googleMap.addMarker(markerOptions);
+        @Override
+        protected void onPostExecute(LatLng loc) {
+            if (loc != null) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(loc);
+                markerOptions.title(name);
+                googleMap.addMarker(markerOptions);
+            }
         }
     }
 
@@ -147,9 +150,8 @@ public class LocateFragment extends Fragment {
 
         for (int i = 0; i < userIDs.size(); i++) {
             Log.d("user id log", userIDs.get(i));
-            new GetLocationTable(userIDs.get(i)).execute();
+            new GetLocationTable(userIDs.get(i), usernames.get(i)).execute();
         }
-        setLocationMarker();
         return v;
 
     }

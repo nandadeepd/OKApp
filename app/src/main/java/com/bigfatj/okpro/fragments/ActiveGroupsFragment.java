@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.bigfatj.okpro.adapters.PeopleGridAdapter;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
@@ -36,8 +38,8 @@ import me.alexrs.prefs.lib.Prefs;
 public class ActiveGroupsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     PeopleGridAdapter bigAdapter;
     GridView grid;
-    int uid;
-    String myUId = Prefs.with(getActivity()).getString("userID", "");
+    String uid;
+   // String myUId = Prefs.with(getActivity()).getString("userID", "");
 
     public ActiveGroupsFragment() {
         // Required empty public constructor
@@ -78,7 +80,8 @@ public class ActiveGroupsFragment extends Fragment implements LoaderManager.Load
                         .setPositiveButton("OK?", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                uid = ((Cursor) grid.getAdapter().getItem(position)).getColumnIndex(GroupContract.USER_ID);
+                                Cursor c = (Cursor) grid.getAdapter().getItem(position);
+                                uid = c.getString(c.getColumnIndex(GroupContract.USER_ID));
                                 sendMessage("Ok?", uid);
 
                             }
@@ -88,17 +91,17 @@ public class ActiveGroupsFragment extends Fragment implements LoaderManager.Load
 
     }
 
-    private void sendMessage(String s, int uid) {
-        final String msg = s;
-        final String userid = String.valueOf(uid);
+    private void sendMessage(final String s, final String uid) {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                if (msg.length() > 0) {
-                    HttpPost post = new HttpPost("http://okapp.16mb.com/sendmsg.php?ffid=" + userid + "&msg=" + msg);
+                if (s.length() > 0) {
+                    Log.d("userid",uid);
+                    HttpPost post = new HttpPost("http://okapp.16mb.com/sendmsg.php?ffid=" + Prefs.with(getActivity()).getString("userID","") + "&msg=" + s + "&fid="+uid);
                     DefaultHttpClient hc = new DefaultHttpClient();
                     try {
                         HttpResponse res = hc.execute(post);
+                        Log.d("check", EntityUtils.toString(res.getEntity()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

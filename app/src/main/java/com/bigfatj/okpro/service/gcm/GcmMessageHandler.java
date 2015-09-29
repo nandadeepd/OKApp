@@ -19,6 +19,7 @@ import com.bigfatj.okpro.database.GroupContract;
 import com.bigfatj.okpro.database.GroupProvider;
 import com.bigfatj.okpro.OkAppActivity;
 import com.bigfatj.okpro.R;
+import com.bigfatj.okpro.service.NotifBarReplier;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -65,12 +66,12 @@ public class GcmMessageHandler extends IntentService {
         message = data[0] + "   " + name;
         cursor.close();
         //showToast();
-        showNotification(data[1], name);
+        showNotification(data[1], name, data[0]);
         Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("message"));
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    private void showNotification(String id, String name) {
+    private void showNotification(final String id, String name,final String msg) {
 
         final String uname = name;
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
@@ -86,13 +87,27 @@ public class GcmMessageHandler extends IntentService {
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 
 
+                Intent replyIntent = new Intent(GcmMessageHandler.this, NotifBarReplier.class);
+                replyIntent.putExtra("user",id);
+                PendingIntent pendingIntentReply = PendingIntent.getBroadcast(GcmMessageHandler.this, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
                 Intent notificationIntent = new Intent(GcmMessageHandler.this, OkAppActivity.class);
                 PendingIntent contentIntent = PendingIntent.getActivity(GcmMessageHandler.this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 mBuilder.setContentTitle(uname);
-                mBuilder.setContentText("You OK?");
                 mBuilder.setSmallIcon(R.mipmap.ic_launcher);
                 mBuilder.setContentIntent(contentIntent);
                 mBuilder.setLargeIcon(loadedImage);
+                if(msg.equals("imok"))
+                {
+                    mBuilder.setContentText("I'm OK!");
+
+                }
+                else
+                {
+                    mBuilder.addAction(new NotificationCompat.Action(R.drawable.ic_thumb_up,"OK",pendingIntentReply));
+                    mBuilder.setContentText("You OK?");
+                }
                 Notification n = mBuilder.build();
                 mNotificationManager.notify(0, n);
 

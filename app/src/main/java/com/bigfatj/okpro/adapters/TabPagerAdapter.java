@@ -13,7 +13,7 @@ import com.bigfatj.okpro.fragments.LocateFragment;
  */
 public class TabPagerAdapter extends FragmentPagerAdapter {
 
-    private final String[] TITLES = {"Groups", "Emergency", "Locate"};
+    private final String[] TITLES = {"Groups", "Locate"};
 
     public TabPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -25,9 +25,9 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return ActiveGroupsFragment.newInstance(position);
+           // case 1:
+              //  return EmergencyFragment.newInstance(position);
             case 1:
-                return EmergencyFragment.newInstance(position);
-            case 2:
                 return LocateFragment.newInstance(position);
 
         }
